@@ -8,19 +8,54 @@
 ## Задача 1
 
 Используя docker поднимите инстанс MySQL (версию 8). Данные БД сохраните в volume.
+```
+version: '3.1'
+
+volumes:
+  data: {}
+  backup: {}
+
+services:
+
+  db:
+    image: mysql:8.0-oracle
+    container_name: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    volumes:
+     - ./data:/var/lib/mysql
+     - ./backup:/media/mysql/backup
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: test_db
+```
 
 Изучите [бэкап БД](https://github.com/netology-code/virt-homeworks/tree/master/06-db-03-mysql/test_data) и 
 восстановитесь из него.
-
+```
+mysql -u root -p ${test_db} < test_dump.sql
+```
 Перейдите в управляющую консоль `mysql` внутри контейнера.
-
+```
+mysql -h 127.0.0.1 -u root -p
+```
 Используя команду `\h` получите список управляющих команд.
 
 Найдите команду для выдачи статуса БД и **приведите в ответе** из ее вывода версию сервера БД.
+![image](https://user-images.githubusercontent.com/40559167/169691190-6b9b7588-9e0a-47c3-a32e-341330a2f624.png)
+
 
 Подключитесь к восстановленной БД и получите список таблиц из этой БД.
+![image](https://user-images.githubusercontent.com/40559167/169691129-3beff22e-0c93-4fc8-87de-fc5537b7bcad.png)
 
 **Приведите в ответе** количество записей с `price` > 300.
+```
+select * from orders where price > 300;
+```
+![image](https://user-images.githubusercontent.com/40559167/169691286-0edd1b12-7d4f-4a4d-8e5f-d45ab17d42a6.png)
+
 
 В следующих заданиях мы будем продолжать работу с данным контейнером.
 
